@@ -1,3 +1,9 @@
+# HiveをStatefulWidgetで使う
+カウンターで追加したデータを永続化する
+削除して、また追加していくと以前のデータが残っていて増えたり、アプリを
+再起動して、追加するとデータが更新される。
+
+```dart
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 
@@ -181,3 +187,5 @@ class _MyHomePageState extends State<MyHomePage> {
     print("call disposeが呼ばれた!");
   }
 }
+
+```
