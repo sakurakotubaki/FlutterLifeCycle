@@ -7,6 +7,7 @@ Flutterのプロジェクトが作成されたときについているコメン�
 コメントを翻訳
 ```dart
 import 'package:flutter/material.dart';
+import 'package:lifecycle_app/dummy_page.dart';
 
 void main() {
   runApp(const MyApp());
@@ -50,9 +51,15 @@ class MyHomePage extends StatefulWidget {
   // 常に "final" とマークされる。
 
   final String title;
-
+  // createState
+  // StatefulWidgetを構築する時に最初に呼ばれる。
+  // stateオブジェクトを作成するために呼ばれる。
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  // ignore: no_logic_in_create_state
+  State<MyHomePage> createState() {
+    print("createStateが呼ばれた!");
+    return _MyHomePageState();
+  }
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -60,6 +67,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   void _incrementCounter() {
     setState(() {
+      print("setStateが呼ばれた!");
       // このsetStateの呼び出しは、Flutterフレームワークに、このStateに何か変更があったことを伝える。
       // これにより、以下のビルドメソッドを再実行し、ディスプレイに更新された値を反映させます。
       // 表示に更新された値を反映させるために、以下のビルドメソッドを再実行する。もし
@@ -67,8 +75,39 @@ class _MyHomePageState extends State<MyHomePage> {
       // ビルドメソッドは再コールされないので、何も起こらないように見える。
       _counter++;
     });
+    // カウンターを押すと画面遷移する.
+    nextpage();
   }
 
+  void nextpage() async {
+    // ダミー画面へ遷移
+    await Navigator.of(context)
+        .pushReplacement(MaterialPageRoute(builder: (context) {
+      return DummyPage();
+    }));
+  }
+
+  // initState
+  // Widgetツリーの初期化を行う。
+  // 1度だけ呼ばれる。
+  @override
+  void initState() {
+    super.initState();
+    print("call initStateが呼ばれた!");
+  }
+
+  // didChangeDependencies
+  // initStateの後に呼ばれる。
+  // stateオブジェクトの依存関係が変更された時にも呼び出される。
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    print("call didChangeDependenciesが呼ばれた!");
+  }
+
+  // build
+  // Widgetで作られるUIを構築する。
+  // ツリーの変更があった部分を検知して置き換える。
   @override
   Widget build(BuildContext context) {
     // このメソッドは setState が呼ばれるたびに再実行されます。
@@ -121,6 +160,22 @@ class _MyHomePageState extends State<MyHomePage> {
         child: const Icon(Icons.add),
       ), // この末尾のカンマは、ビルドメソッドの自動書式化を円滑にするものです。
     );
+  }
+
+  // deactivate
+  // stateオブジェクトが削除されると呼び出される。
+  @override
+  void deactivate() {
+    super.deactivate();
+    print("call deactivateが呼ばれた!");
+  }
+
+  // dispose
+  // オブジェクトが削除され、2度とビルドされない状態になった時に呼び出される。
+  @override
+  void dispose() {
+    super.dispose();
+    print("call disposeが呼ばれた!");
   }
 }
 ```
